@@ -1,0 +1,44 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+const BASE_URL = 'https://restcountries.com/v3.1';
+const SEARCH_PARAM = 'name';
+const SEARCH_FILTER = 'fields=name,capital,population,flags,languages';
+
+//fetchCountries(name)
+
+//https://restcountries.com/v3.1/name/{name}
+
+// name.official - полное имя страны
+// capital - столица
+// population - население
+// flags.svg - ссылка на изображение флага
+// languages - массив языков
+
+
+export default class NewsApiService {
+  constructor() {
+    this.searchQuery = '';
+  }
+
+  fetchCountries() {
+    const url = `${BASE_URL}/${SEARCH_PARAM}/${this.searchQuery}?${SEARCH_FILTER}`;
+
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(
+            Notify.failure('Oops, there is no country with that name')
+          );
+        }
+        return response.json();
+      })
+      .catch(error => error);
+  }
+  get query() {
+    return this.searchQuery;
+  }
+
+  set query(newQuery) {
+    this.searchQuery = newQuery;
+  }
+}
+
